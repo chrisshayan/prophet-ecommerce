@@ -1,23 +1,22 @@
 import pandas as pd
-import numpy  as np
 
 from fbprophet import Prophet
 from fbprophet.diagnostics import cross_validation
-
-
-#  Take in true and predicted values then calculate MAPE
-def mean_absolute_percentage_error(y_true, y_pred):
-    y_true, y_pred = np.array(y_true), np.array(y_pred)
-    return np.mean(np.abs((y_true - y_pred) / y_true)) * 100
-
+from fbprophet.diagnostics import performance_metrics
 
 dataFile = pd.read_csv('files/Mar-Nov-18-eCom-SOQty.csv')
 dataFile.head()
+dataFile.loc[(dataFile['ds'] == '20-10-2018'), 'y'] = None
+dataFile.loc[(dataFile['ds'] == '26/11/2018'), 'y'] = None
+dataFile.loc[(dataFile['ds'] == '27/11/2018'), 'y'] = None
 
-prophet = Prophet()
+prophet = Prophet(
+    growth='linear',
+    seasonality_mode='additive')
+
 prophet.fit(dataFile)
 
-future = prophet.make_future_dataframe(periods=365)
+future = prophet.make_future_dataframe(freq='D', periods=30*6)
 future.tail()
 
 forecast = prophet.predict(future)
@@ -29,6 +28,8 @@ fig1.savefig('forecastSOQty.png')
 fig2 = prophet.plot_components(forecast)
 fig2.savefig('forecastComponentsSOQty.png')
 
-cross_validation_results = cross_validation(prophet, initial='30 days', period='15 days', horizon='5 days')
-# map_baseline = mean_absolute_percentage_error(cross_validation_results, cross_validation_results.yhat)
-# print map_baseline
+cross_validation_results = cross_validation(prophet, initial='210 days', period='15 days', horizon='70 days')
+print cross_validation_results
+
+performance_metrics_results = performance_metrics(cross_validation_results)
+print performance_metrics_results
