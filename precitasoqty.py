@@ -6,6 +6,7 @@ from fbprophet.diagnostics import performance_metrics
 
 dataFile = pd.read_csv('files/Mar-Nov-18-eCom-SOQty.csv')
 dataFile.head()
+# adding the outliers into the model
 dataFile.loc[(dataFile['ds'] == '20-10-2018'), 'y'] = None
 dataFile.loc[(dataFile['ds'] == '26/11/2018'), 'y'] = None
 dataFile.loc[(dataFile['ds'] == '27/11/2018'), 'y'] = None
