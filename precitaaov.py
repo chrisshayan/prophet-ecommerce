@@ -29,9 +29,14 @@ fig1.savefig('forecastAOV.png')
 fig2 = prophet.plot_components(forecast)
 fig2.savefig('forecastComponentsAOV.png')
 
+
 cross_validation_results = cross_validation(prophet, initial='210 days', period='15 days', horizon='70 days')
 print cross_validation_results
 
 performance_metrics_results = performance_metrics(cross_validation_results)
 print performance_metrics_results
+
+
+# I still do not know what this function will do, need to learn. Should be something about smoothing
+# print prophet.predict_seasonal_components(forecast)
 

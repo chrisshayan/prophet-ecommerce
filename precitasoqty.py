@@ -23,6 +23,8 @@ future.tail()
 forecast = prophet.predict(future)
 forecast[['ds', 'yhat', 'yhat_lower', 'yhat_upper']].tail()
 
+# forecast.to_csv('PredictSOQtyOutput.csv')
+
 fig1 = prophet.plot(forecast)
 fig1.savefig('forecastSOQty.png')
 
